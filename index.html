@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Плюшки-Ватрушки — пекарня в Бугульме | Свежая выпечка каждый день</title>
+  <meta name="description" content="Пекарня «Плюшки-Ватрушки» в Бугульме: румяные плюшки, творожные ватрушки, круассаны, торты на заказ и кофе с собой. Гоголя 63, Калинина 34, Кирова 12. Ежедневно 08:00–20:00.">
+  <meta name="theme-color" content="#8A5A44">
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="%238A5A44"/><ellipse cx="32" cy="33" rx="23" ry="16" fill="%23E0A254"/><ellipse cx="32" cy="31" rx="13" ry="8" fill="%23FBF0D8"/></svg>'>
+
+  <!-- Шрифты: Lora (уютные засечки) + Manrope (текст) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Manrope:wght@400..800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream:    '#FAF5EE', // сливочно-мучной фон
+            cinnamon: '#8A5A44', // запечённая корица
+            cocoa:    '#784B37', // какао (подвал)
+            choco:    '#2D1E17', // тёмный шоколад (текст)
+            sand100:  '#F2E7D8',
+            sand200:  '#EFE0CD',
+            sand300:  '#E8D4BC',
+            honey:    '#D9975C',
+            berry:    '#B0563B',
+            milk:     '#FBF3E4'
+          },
+          fontFamily: {
+            display: ['Lora', 'Georgia', 'serif'],
+            sans: ['Manrope', 'system-ui', 'sans-serif']
+          },
+          boxShadow: {
+            soft: '0 24px 50px -20px rgba(45,30,23,.35)',
+            card: '0 12px 30px -14px rgba(45,30,23,.22)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    ::selection { background: rgba(217,151,92,.4); }
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: #FAF5EE; }
+    ::-webkit-scrollbar-thumb { background: #E8D4BC; border-radius: 8px; }
+    ::-webkit-scrollbar-thumb:hover { background: #C9A87F; }
+
+    *:focus-visible { outline: 2px solid #8A5A44; outline-offset: 2px; border-radius: 6px; }
+    input:focus-visible, select:focus-visible, textarea:focus-visible { outline: none; }
+
+    /* Пар над выпечкой */
+    .steam { transform-box: fill-box; transform-origin: 50% 100%; opacity: .55;
+             animation: steamUp 3.4s ease-in-out infinite; }
+    .steam-2 { animation-delay: 1.15s; }
+    .steam-3 { animation-delay: 2.3s; }
+    @keyframes steamUp {
+      0%   { opacity: 0;   transform: translateY(8px); }
+      35%  { opacity: .7; }
+      70%  { opacity: .35; }
+      100% { opacity: 0;   transform: translateY(-16px); }
+    }
+
+    /* Вращающийся штамп «свежая выпечка» */
+    .spin-slow { animation: spinSlow 26s linear infinite; transform-origin: 60px 60px; }
+    @keyframes spinSlow { to { transform: rotate(360deg); } }
+
+    /* Плавное появление секций */
+    .reveal { opacity: 0; transform: translateY(20px);
+              transition: opacity .7s ease, transform .7s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+
+    /* Модальные окна */
+    .modal { position: fixed; inset: 0; z-index: 70; display: flex; align-items: center;
+             justify-content: center; padding: 1rem; visibility: hidden; opacity: 0;
+             transition: opacity .25s ease, visibility .25s; }
+    .modal.open { visibility: visible; opacity: 1; }
+    .modal .m-panel { transform: translateY(16px) scale(.97);
+                      transition: transform .3s cubic-bezier(.2,.9,.3,1.2); }
+    .modal.open .m-panel { transform: none; }
+
+    /* Индикатор «открыто/закрыто» */
+    .st-dot { display: inline-block; width: 8px; height: 8px; border-radius: 999px; margin-right: 8px; }
+    .st-open { background: #D9975C; animation: pulseSoft 2s ease-in-out infinite; }
+    .st-closed { background: #C9B299; }
+    @keyframes pulseSoft { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+
+    /* Ошибка валидации (тёплый терракотовый, без холодного красного) */
+    .input-error { border-color: #B0563B !important; box-shadow: 0 0 0 3px rgba(176,86,59,.15); }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .steam, .spin-slow, .st-open { animation: none; }
+      .reveal { transition: none; opacity: 1; transform: none; }
+      .modal, .modal .m-panel { transition: none; }
+    }
+  </style>
+</head>
+
+<body class="bg-cream text-choco font-sans antialiased overflow-x-clip">
+
+  <!-- ══════════ SVG-спрайт: рваный край бумаги + иконки ══════════ -->
+  <svg xmlns="http://www.w3.org/2000/svg" class="absolute w-0 h-0 overflow-hidden" aria-hidden="true" focusable="false">
+    <defs>
+      <!-- Рваный крафтовый край (наследуёт currentColor) -->
+      <symbol id="torn" viewBox="0 0 1440 48" preserveAspectRatio="none">
+        <path fill="currentColor" opacity=".4" transform="translate(0,-6)"
+          d="M0 30 L18 24 L34 31 L52 18 L67 26 L88 22 L103 33 L121 20 L139 27 L160 15 L174 24 L196 29 L214 19 L233 26 L251 13 L268 23 L289 30 L305 21 L322 27 L343 16 L361 25 L380 31 L398 20 L417 26 L436 14 L455 24 L472 30 L494 19 L512 27 L531 22 L549 32 L568 18 L585 25 L607 15 L624 24 L641 29 L663 17 L681 26 L700 21 L718 31 L737 16 L756 24 L774 28 L793 18 L812 25 L830 13 L849 23 L867 30 L886 19 L904 26 L923 22 L941 32 L960 17 L979 25 L997 14 L1016 24 L1035 29 L1053 18 L1072 26 L1090 21 L1109 31 L1128 16 L1146 24 L1165 28 L1183 18 L1202 25 L1220 13 L1239 23 L1258 30 L1276 19 L1295 26 L1313 22 L1332 32 L1350 17 L1369 25 L1387 14 L1406 24 L1424 29 L1440 20 L1440 48 L0 48 Z"/>
+        <path fill="currentColor"
+          d="M0 30 L18 24 L34 31 L52 18 L67 26 L88 22 L103 33 L121 20 L139 27 L160 15 L174 24 L196 29 L214 19 L233 26 L251 13 L268 23 L289 30 L305 21 L322 27 L343 16 L361 25 L380 31 L398 20 L417 26 L436 14 L455 24 L472 30 L494 19 L512 27 L531 22 L549 32 L568 18 L585 25 L607 15 L624 24 L641 29 L663 17 L681 26 L700 21 L718 31 L737 16 L756 24 L774 28 L793 18 L812 25 L830 13 L849 23 L867 30 L886 19 L904 26 L923 22 L941 32 L960 17 L979 25 L997 14 L1016 24 L1035 29 L1053 18 L1072 26 L1090 21 L1109 31 L1128 16 L1146 24 L1165 28 L1183 18 L1202 25 L1220 13 L1239 23 L1258 30 L1276 19 L1295 26 L1313 22 L1332 32 L1350 17 L1369 25 L1387 14 L1406 24 L1424 29 L1440 20 L1440 48 L0 48 Z"/>
+      </symbol>
+      <!--_Line-иконки (наследуют stroke) -->
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4.5 12h14"/><path d="m13 6.5 5.5 5.5-5.5 5.5"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12"/><path d="M18 6 6 18"/></symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></symbol>
+      <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21.5S5.5 15.6 5.5 11a6.5 6.5 0 1 1 13 0c0 4.6-6.5 10.5-6.5 10.5Z"/><circle cx="12" cy="11" r="2.4"/></symbol>
+      <symbol id="i-phone" viewBox="0 0 24 24"><path d="M6.8 3.5c.6 0 1.2.4 1.4 1l.9 2.6c.2.6 0 1.3-.5 1.7l-1.2 1a13.6 13.6 0 0 0 6.8 6.8l1-1.2c.4-.5 1.1-.7 1.7-.5l2.6.9c.6.2 1 .8 1 1.4v2.3c0 .9-.7 1.6-1.6 1.5C10.6 20.4 3.6 13.4 3 5.1c-.1-.9.6-1.6 1.5-1.6Z"/></symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.2"/><path d="M12 7.5V12l3 2"/></symbol>
+      <symbol id="i-cup" viewBox="0 0 24 24"><path d="M4.5 9h11.5v5.5a5 5 0 0 1-5 5h-1.5a5 5 0 0 1-5-5Z"/><path d="M16 10h1.6a2.6 2.6 0 0 1 0 5.2H16"/><path d="M7.5 6V4.5"/><path d="M10.5 6V4.5"/><path d="M13.5 6V4.5"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+      <symbol id="i-wheat" viewBox="0 0 24 24">
+        <path d="M12 21V7"/>
+        <path d="M12 8C9.8 8 8.2 6.4 8.2 4.2 10.4 4.2 12 5.8 12 8Z"/>
+        <path d="M12 8c2.2 0 3.8-1.6 3.8-3.8C13.6 4.2 12 5.8 12 8Z"/>
+        <path d="M12 12.5c-2.2 0-3.8-1.6-3.8-3.8 2.2 0 3.8 1.6 3.8 3.8Z"/>
+        <path d="M12 12.5c2.2 0 3.8-1.6 3.8-3.8-2.2 0-3.8 1.6-3.8 3.8Z"/>
+        <path d="M12 17c-2.2 0-3.8-1.6-3.8-3.8 2.2 0 3.8 1.6 3.8 3.8Z"/>
+        <path d="M12 17c2.2 0 3.8-1.6 3.8-3.8-2.2 0-3.8 1.6-3.8 3.8Z"/>
+      </symbol>
+      <symbol id="i-butter" viewBox="0 0 24 24"><path d="M3.5 11h14v7h-14Z"/><path d="m3.5 11 3-4h14l-3 4"/><path d="m17.5 18 3-4V7"/><path d="M7 14.5h4"/></symbol>
+      <!-- Fill-иконки -->
+      <symbol id="i-vk" viewBox="0 0 24 24"><path d="M13.16 18.1c-5.7 0-8.95-3.9-9.08-10.4h2.86c.09 4.77 2.2 6.79 3.86 7.2V7.7h2.7v4.11c1.65-.18 3.38-2.06 3.96-4.11h2.7a7.9 7.9 0 0 1-3.64 5.16 8.2 8.2 0 0 1 4.27 5.24h-2.97c-.63-1.95-2.19-3.46-4.32-3.67v3.67h-.34Z"/></symbol>
+      <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5C8 17.5 4 14.5 4 10.8 4 8 6.2 6 8.6 6c1.4 0 2.7.7 3.4 1.8C12.7 6.7 14 6 15.4 6 17.8 6 20 8 20 10.8c0 3.7-4 6.7-8 9.7Z"/></symbol>
+    </defs>
+  </svg>
+
+  <!-- ══════════ 1. ШАПКА ══════════ -->
+  <header id="siteHeader" class="sticky top-0 z-50 bg-cream/90 backdrop-blur border-b border-sand200 transition-shadow">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-4 py-3">
+      <!-- Двухстрочный логотип -->
+      <a href="#top" class="leading-tight shrink-0" aria-label="Плюшки-Ватрушки — на главную">
+        <span class="block font-display italic font-semibold text-xl md:text-2xl">Плюшки-Ватрушки</span>
+        <span class="block text-[10px] font-extrabold tracking-[0.28em] text-cinnamon uppercase mt-0.5">Пекарня • Бугульма</span>
+      </a>
+
+      <!-- Меню -->
+      <nav class="hidden md:flex items-center gap-7 text-sm font-bold" aria-label="Основная навигация">
+        <a href="#menu" class="hover:text-cinnamon transition-colors">Меню</a>
+        <button type="button" data-open-order data-type="custom" class="hover:text-cinnamon transition-colors">На заказ</button>
+        <a href="#addresses" class="hover:text-cinnamon transition-colors">Адреса</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="tel:+79870054444" class="hidden lg:flex items-center gap-2 text-sm font-extrabold hover:text-cinnamon transition-colors">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-phone"/></svg>
+          +7 (987) 005-44-44
+        </a>
+        <button type="button" data-open-order class="hidden sm:inline-flex bg-cinnamon text-cream rounded-full px-5 py-2.5 text-sm font-bold hover:bg-cocoa transition-colors shadow-card">
+          Заказать выпечку
+        </button>
+        <!-- Бургер -->
+        <button type="button" id="burgerBtn" class="md:hidden w-10 h-10 grid place-items-center rounded-full bg-sand100 hover:bg-sand200 transition-colors" aria-expanded="false" aria-controls="mobileMenu" aria-label="Открыть меню">
+          <svg id="burgerOpen" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><use href="#i-menu"/></svg>
+          <svg id="burgerClose" class="w-5 h-5 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><use href="#i-close"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Мобильное меню -->
+    <div id="mobileMenu" class="hidden md:hidden border-t border-sand200 bg-cream px-4 py-3">
+      <nav class="flex flex-col text-sm font-bold" aria-label="Мобильная навигация">
+        <a href="#menu" class="mobile-link py-3 border-b border-sand100">Меню</a>
+        <button type="button" data-open-order data-type="custom" class="mobile-link py-3 border-b border-sand100 text-left">На заказ</button>
+        <a href="#addresses" class="mobile-link py-3 border-b border-sand100">Адреса</a>
+        <a href="tel:+79870054444" class="py-3 flex items-center gap-2 text-cinnamon">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-phone"/></svg>
+          +7 (987) 005-44-44
+        </a>
+        <button type="button" data-open-order class="mobile-link mt-1 mb-2 bg-cinnamon text-cream rounded-full px-5 py-3 font-bold">Заказать выпечку</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ══════════ 2. ПЕРВЫЙ ЭКРАН (корица + рваная бумага) ══════════ -->
+    <section class="relative bg-cinnamon text-cream">
+      <!-- рваный край сверху -->
+      <svg class="block w-full h-7 md:h-10 text-cream rotate-180" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><use href="#torn" width="1440" height="48"/></svg>
+
+      <!-- мучные крапинки на фоне -->
+      <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <g fill="#F6E7D2" opacity=".14">
+          <circle cx="90" cy="120" r="3"/><circle cx="220" cy="480" r="2"/><circle cx="360" cy="90" r="2.5"/>
+          <circle cx="520" cy="520" r="3"/><circle cx="700" cy="70" r="2"/><circle cx="880" cy="540" r="2.5"/>
+          <circle cx="1040" cy="100" r="3"/><circle cx="1180" cy="470" r="2"/><circle cx="1320" cy="150" r="2.5"/>
+          <circle cx="1400" cy="520" r="3"/><circle cx="160" cy="300" r="2"/><circle cx="1260" cy="320" r="2"/>
+        </g>
+      </svg>
+
+      <div class="relative max-w-6xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-10 items-center py-10 md:py-14">
+        <!-- Левая колонка -->
+        <div class="reveal">
+          <span class="inline-flex items-center gap-2 rounded-full bg-cream/10 border border-cream/25 px-4 py-1.5 text-[11px] font-extrabold tracking-[0.18em] uppercase">
+            <svg class="w-4 h-4 text-honey" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-wheat"/></svg>
+            Пекарня у дома · Бугульма
+          </span>
+
+          <h1 class="font-display text-4xl sm:text-5xl lg:text-[3.4rem] leading-[1.1] mt-6">
+            Утро начинается<br>
+            с <em class="italic text-[#F2D8BE]">тёплой сдобы</em>.
+          </h1>
+
+          <p class="text-cream/85 max-w-md mt-5 leading-relaxed">
+            Каждое утро в Бугульме мы печём румяные плюшки, творожные ватрушки
+            и хрустящие круассаны — на настоящем сливочном масле, по домашним рецептам.
+          </p>
+
+          <div class="mt-8 flex flex-wrap items-center gap-5">
+            <a href="#menu" class="inline-flex items-center gap-2 bg-cream text-choco rounded-full px-7 py-3.5 font-bold shadow-soft hover:bg-sand100 transition-colors">
+              Смотреть меню
+              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-arrow"/></svg>
+            </a>
+            <a href="#addresses" class="font-bold text-cream/90 underline-offset-4 hover:underline">Найти пекарню рядом</a>
+          </div>
+
+          <div class="mt-10 flex flex-wrap gap-x-6 gap-y-2 text-sm text-cream/75 font-semibold">
+            <span>3 пекарни в городе</span><span class="text-honey" aria-hidden="true">•</span>
+            <span>горячее с 08:00</span><span class="text-honey" aria-hidden="true">•</span>
+            <span>без маргарина</span>
+          </div>
+        </div>
+
+        <!-- Правая колонка: ватрушка на керамической тарелке -->
+        <div class="relative reveal" style="transition-delay:120ms">
+          <svg viewBox="0 0 520 430" class="w-full max-w-[540px] mx-auto" role="img" aria-label="Румяная ватрушка с творогом на керамической тарелке, рядом золотая ложечка">
+            <defs>
+              <radialGradient id="hPlate" cx=".5" cy=".42" r=".75">
+                <stop offset="0" stop-color="#FFFDF7"/><stop offset=".62" stop-color="#F3EADC"/><stop offset="1" stop-color="#E4D6C2"/>
+              </radialGradient>
+              <linearGradient id="hCrust" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#F2BE72"/><stop offset=".55" stop-color="#D9924A"/><stop offset="1" stop-color="#B06A2E"/>
+              </linearGradient>
+              <radialGradient id="hTop" cx=".38" cy=".32" r=".95">
+                <stop offset="0" stop-color="#F7CE8A"/><stop offset=".55" stop-color="#E0A254"/><stop offset="1" stop-color="#C07E38"/>
+              </radialGradient>
+              <radialGradient id="hFill" cx=".42" cy=".38" r=".85">
+                <stop offset="0" stop-color="#FDF4DE"/><stop offset=".6" stop-color="#F5E3BC"/><stop offset="1" stop-color="#E8CD9C"/>
+              </radialGradient>
+              <linearGradient id="hGold" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#E2B279"/><stop offset=".5" stop-color="#C08A47"/><stop offset="1" stop-color="#9A6A30"/>
+              </linearGradient>
+              <filter id="hSoft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="7"/></filter>
+              <filter id="hSoft2" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3"/></filter>
+            </defs>
+
+            <!-- тень и тарелка -->
+            <ellipse cx="260" cy="336" rx="205" ry="40" fill="#4E2F1F" opacity=".35" filter="url(#hSoft)"/>
+            <ellipse cx="260" cy="318" rx="208" ry="58" fill="url(#hPlate)"/>
+            <ellipse cx="260" cy="316" rx="165" ry="44" fill="#F8F1E4" stroke="#E3D4BE" stroke-width="2"/>
+            <g fill="#CBB79C" opacity=".7">
+              <circle cx="110" cy="316" r="2"/><circle cx="150" cy="342" r="1.6"/><circle cx="398" cy="300" r="2"/>
+              <circle cx="420" cy="330" r="1.6"/><circle cx="330" cy="352" r="1.8"/><circle cx="200" cy="356" r="1.5"/>
+            </g>
+
+            <!-- ватрушка -->
+            <ellipse cx="250" cy="302" rx="128" ry="26" fill="#6B3F24" opacity=".35" filter="url(#hSoft2)"/>
+            <path d="M122 236 C122 288 178 316 250 316 C322 316 378 288 378 236 L378 218 L122 218 Z" fill="url(#hCrust)"/>
+            <ellipse cx="250" cy="218" rx="128" ry="74" fill="url(#hTop)"/>
+            <path d="M136 196 C160 158 210 140 250 140" fill="none" stroke="#F9D9A0" stroke-width="8" stroke-linecap="round" opacity=".55"/>
+            <ellipse cx="300" cy="180" rx="16" ry="9" fill="#B4712F" opacity=".4" transform="rotate(-15 300 180)"/>
+            <ellipse cx="190" cy="168" rx="12" ry="7" fill="#B4712F" opacity=".3"/>
+            <ellipse cx="320" cy="232" rx="14" ry="8" fill="#B4712F" opacity=".35"/>
+
+            <!-- творожная серединка -->
+            <ellipse cx="250" cy="222" rx="82" ry="47" fill="#C89250" opacity=".8"/>
+            <ellipse cx="250" cy="219" rx="76" ry="42" fill="url(#hFill)"/>
+            <g fill="#FFF9E8" opacity=".9">
+              <circle cx="228" cy="210" r="7"/><circle cx="262" cy="226" r="6"/><circle cx="240" cy="232" r="5"/>
+              <circle cx="276" cy="206" r="5"/><circle cx="222" cy="226" r="4"/>
+            </g>
+            <g fill="#B98A4F"><circle cx="236" cy="222" r="1.3"/><circle cx="258" cy="212" r="1.3"/><circle cx="270" cy="232" r="1.3"/><circle cx="244" cy="204" r="1.2"/></g>
+            <g fill="#5F3A22">
+              <ellipse cx="238" cy="214" rx="5" ry="3.5" transform="rotate(-20 238 214)"/>
+              <ellipse cx="266" cy="222" rx="5" ry="3.5" transform="rotate(15 266 222)"/>
+              <ellipse cx="252" cy="200" rx="4.5" ry="3" transform="rotate(40 252 200)"/>
+            </g>
+            <circle cx="237" cy="212" r="1" fill="#8A5A34"/><circle cx="265" cy="220" r="1" fill="#8A5A34"/>
+            <ellipse cx="226" cy="200" rx="26" ry="12" fill="#FFFDF4" opacity=".5" transform="rotate(-12 226 200)"/>
+
+            <!-- крошки -->
+            <g fill="#C98A4B">
+              <circle cx="150" cy="322" r="3"/><circle cx="170" cy="330" r="2"/><circle cx="352" cy="326" r="2.5"/>
+              <circle cx="368" cy="318" r="2"/><circle cx="330" cy="336" r="1.8"/>
+              <rect x="188" y="332" width="5" height="3" rx="1.5" transform="rotate(20 190 333)"/>
+            </g>
+
+            <!-- золотая ложечка -->
+            <ellipse cx="408" cy="332" rx="55" ry="10" fill="#4E2F1F" opacity=".25" filter="url(#hSoft2)"/>
+            <path d="M352 322 C382 310 428 306 462 312 C466 313 466 319 462 320 C428 326 384 330 354 330 Z" fill="url(#hGold)"/>
+            <ellipse cx="344" cy="326" rx="26" ry="12" fill="url(#hGold)" transform="rotate(-8 344 326)"/>
+            <ellipse cx="344" cy="325" rx="18" ry="8" fill="#8A5C28" opacity=".5" transform="rotate(-8 344 325)"/>
+            <path d="M370 318 C398 311 430 309 452 313" fill="none" stroke="#F4D9A6" stroke-width="2.5" stroke-linecap="round" opacity=".8"/>
+
+            <!-- пар -->
+            <g fill="none" stroke="#FFF3E0" stroke-width="6" stroke-linecap="round">
+              <path class="steam"          d="M218 150 C210 132 226 122 218 104 C212 90 222 80 218 66"/>
+              <path class="steam steam-2"  d="M254 142 C246 124 262 112 254 94 C248 80 258 70 252 54"/>
+              <path class="steam steam-3"  d="M290 150 C282 134 298 122 290 106 C284 92 294 82 290 68"/>
+            </g>
+          </svg>
+
+          <!-- вращающийся штамп -->
+          <svg viewBox="0 0 120 120" class="hidden sm:block absolute -top-2 right-0 lg:right-4 w-28 h-28" aria-hidden="true">
+            <defs><path id="stampArc" d="M60 60 m -42 0 a42 42 0 1 1 84 0 a42 42 0 1 1 -84 0"/></defs>
+            <circle cx="60" cy="60" r="58" fill="#784B37" opacity=".6"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#F2E7D8" stroke-opacity=".35" stroke-dasharray="3 5"/>
+            <g class="spin-slow">
+              <text font-family="Manrope, sans-serif" font-size="9" font-weight="700" letter-spacing="2.6" fill="#F6E9D6">
+                <textPath href="#stampArc">СВЕЖАЯ ВЫПЕЧКА • КАЖДОЕ УТРО •</textPath>
+              </text>
+            </g>
+            <svg x="48" y="48" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F6E9D6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-wheat"/></svg>
+          </svg>
+        </div>
+      </div>
+
+      <!-- рваный край снизу -->
+      <svg class="block w-full h-7 md:h-10 text-cream" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><use href="#torn" width="1440" height="48"/></svg>
+    </section>
+
+    <!-- ══════════ 3. ПРЕИМУЩЕСТВА + 3 КАРТОЧКИ ══════════ -->
+    <section id="menu" class="scroll-mt-24 py-14 md:py-20">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="text-center reveal">
+          <p class="text-xs font-extrabold tracking-[0.25em] text-cinnamon uppercase">Витрина пекарни</p>
+          <h2 class="font-display text-3xl md:text-4xl mt-2">Что мы печём для вас</h2>
+          <p class="text-sm text-choco/60 mt-3">Нажмите на стрелку карточки — откроется мини-прайс категории.</p>
+        </div>
+
+        <!-- два бейджа преимуществ -->
+        <div class="mt-9 flex flex-col sm:flex-row justify-center gap-5 sm:gap-12 reveal">
+          <div class="flex items-center gap-3.5">
+            <span class="w-12 h-12 rounded-full bg-sand200 text-cinnamon grid place-items-center shrink-0">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-wheat"/></svg>
+            </span>
+            <span>
+              <span class="block font-bold text-sm">Свежая выпечка каждое утро</span>
+              <span class="block text-xs text-choco/60 mt-0.5">Первая партия — к 08:00, печём весь день</span>
+            </span>
+          </div>
+          <div class="flex items-center gap-3.5">
+            <span class="w-12 h-12 rounded-full bg-sand200 text-cinnamon grid place-items-center shrink-0">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-butter"/></svg>
+            </span>
+            <span>
+              <span class="block font-bold text-sm">Натуральное сливочное масло и творог</span>
+              <span class="block text-xs text-choco/60 mt-0.5">Никакого маргарина — только честный состав</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- три карточки направлений -->
+        <div class="mt-10 grid md:grid-cols-3 gap-5 md:gap-6">
+
+          <!-- Карточка 1: Свежая выпечка -->
+          <article data-cat-card="fresh" class="group cursor-pointer bg-sand100 rounded-[1.75rem] border border-choco/5 p-6 pt-7 flex flex-col shadow-card hover:shadow-soft hover:-translate-y-1 transition-all duration-300 reveal">
+            <h3 class="font-display text-2xl text-center leading-snug">Свежая выпечка</h3>
+            <div class="my-4 transition-transform duration-500 group-hover:scale-[1.04] group-hover:-rotate-1">
+              <svg viewBox="0 0 300 210" class="w-full" role="img" aria-label="Плюшка с корицей на тарелке">
+                <defs>
+                  <linearGradient id="aCrust" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D9924A"/><stop offset="1" stop-color="#A9622B"/></linearGradient>
+                  <radialGradient id="aTop" cx=".38" cy=".3" r=".95"><stop offset="0" stop-color="#F5C77E"/><stop offset=".55" stop-color="#D99A4E"/><stop offset="1" stop-color="#BC7A36"/></radialGradient>
+                  <filter id="aBlur" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3"/></filter>
+                </defs>
+                <ellipse cx="150" cy="180" rx="118" ry="16" fill="#6B3F24" opacity=".18" filter="url(#aBlur)"/>
+                <ellipse cx="150" cy="170" rx="118" ry="26" fill="#FDFAF3"/>
+                <ellipse cx="150" cy="168" rx="92" ry="18" fill="#F4ECDD" stroke="#E7DAC4" stroke-width="1.5"/>
+                <ellipse cx="150" cy="128" rx="86" ry="46" fill="url(#aCrust)"/>
+                <ellipse cx="150" cy="112" rx="86" ry="50" fill="url(#aTop)"/>
+                <path d="M150 112 c7 -5 16 -1 17 7 c1 9 -9 16 -19 13 c-12 -3 -17 -16 -10 -27 c8 -13 27 -15 38 -5 c13 11 13 32 0 44 c-15 14 -41 12 -54 -4 c-14 -17 -11 -43 7 -56"
+                      fill="none" stroke="#8F5127" stroke-width="9" stroke-linecap="round" opacity=".9"/>
+                <path d="M90 98 q15 -10 30 0 t30 0 t30 0 t30 0" fill="none" stroke="#FFF6E4" stroke-width="5" stroke-linecap="round" opacity=".85"/>
+                <path d="M96 124 q15 -9 28 0 t28 0 t28 0 t26 0" fill="none" stroke="#FFF6E4" stroke-width="4" stroke-linecap="round" opacity=".7"/>
+                <g fill="#FFFDF6" opacity=".9"><circle cx="120" cy="88" r="1.6"/><circle cx="178" cy="94" r="1.6"/><circle cx="152" cy="140" r="1.6"/><circle cx="200" cy="118" r="1.4"/></g>
+                <g fill="#C98A4B"><circle cx="60" cy="176" r="2.5"/><circle cx="238" cy="180" r="2"/><circle cx="212" cy="186" r="1.5"/></g>
+                <path class="steam steam-2" d="M150 52 C144 40 156 32 150 18" fill="none" stroke="#D9C4A4" stroke-width="4.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="mt-auto flex items-end justify-between gap-3">
+              <p class="text-sm text-choco/65 leading-snug">Плюшки с корицей, ватрушки с творогом и хрустящие круассаны.</p>
+              <button type="button" data-cat-btn="fresh" aria-label="Открыть мини-прайс: свежая выпечка"
+                      class="w-11 h-11 shrink-0 rounded-full bg-cream text-choco grid place-items-center shadow-card group-hover:bg-cinnamon group-hover:text-cream transition-colors">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-arrow"/></svg>
+              </button>
+            </div>
+          </article>
+
+          <!-- Карточка 2: Торты и пироги на заказ -->
+          <article data-cat-card="custom" class="group cursor-pointer bg-sand200 rounded-[1.75rem] border border-choco/5 p-6 pt-7 flex flex-col shadow-card hover:shadow-soft hover:-translate-y-1 transition-all duration-300 reveal" style="transition-delay:100ms">
+            <h3 class="font-display text-2xl text-center leading-snug">Торты и пироги<br>на заказ</h3>
+            <div class="my-4 transition-transform duration-500 group-hover:scale-[1.04] group-hover:rotate-1">
+              <svg viewBox="0 0 300 210" class="w-full" role="img" aria-label="Праздничный торт с шоколадной глазурью и клубникой">
+                <defs>
+                  <linearGradient id="bSponge" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EDC58F"/><stop offset="1" stop-color="#D9A566"/></linearGradient>
+                  <radialGradient id="bBerry" cx=".38" cy=".32" r=".9"><stop offset="0" stop-color="#D2604A"/><stop offset="1" stop-color="#A93E2C"/></radialGradient>
+                  <filter id="bBlur" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3"/></filter>
+                </defs>
+                <ellipse cx="150" cy="180" rx="118" ry="16" fill="#6B3F24" opacity=".18" filter="url(#bBlur)"/>
+                <ellipse cx="150" cy="170" rx="118" ry="26" fill="#FDFAF3"/>
+                <ellipse cx="150" cy="168" rx="92" ry="18" fill="#F4ECDD" stroke="#E7DAC4" stroke-width="1.5"/>
+                <ellipse cx="150" cy="160" rx="84" ry="13" fill="#6B3F24" opacity=".2" filter="url(#bBlur)"/>
+                <!-- бисквит с кремовыми слоями -->
+                <path d="M78 96 L78 140 C78 154 110 164 150 164 C190 164 222 154 222 140 L222 96 Z" fill="url(#bSponge)"/>
+                <path d="M78 118 C110 128 190 128 222 118" fill="none" stroke="#FBF1DC" stroke-width="7"/>
+                <path d="M78 136 C110 146 190 146 222 136" fill="none" stroke="#FBF1DC" stroke-width="5" opacity=".9"/>
+                <!-- шоколадная глазурь с потёками -->
+                <ellipse cx="150" cy="96" rx="72" ry="22" fill="#6E4630"/>
+                <path d="M80 100 C110 122 190 122 220 100" fill="none" stroke="#6E4630" stroke-width="12" stroke-linecap="round"/>
+                <g fill="#6E4630">
+                  <path d="M95 111c0 11 10 11 10 0Z"/><path d="M121 117c0 12 10 12 10 0Z"/>
+                  <path d="M145 119c0 13 10 13 10 0Z"/><path d="M169 117c0 11 10 11 10 0Z"/>
+                  <path d="M195 111c0 10 10 10 10 0Z"/>
+                </g>
+                <ellipse cx="136" cy="88" rx="24" ry="8" fill="#8A5A3C" opacity=".6"/>
+                <!-- кремовые розочки -->
+                <g fill="#FBF1DC">
+                  <circle cx="116" cy="84" r="6.5"/><circle cx="122" cy="80" r="4.5"/>
+                  <circle cx="150" cy="79" r="7.5"/><circle cx="157" cy="75" r="5"/>
+                  <circle cx="184" cy="84" r="6.5"/><circle cx="178" cy="80" r="4.5"/>
+                </g>
+                <g fill="none" stroke="#E4D0B4" stroke-width="1.5">
+                  <path d="M113 84a4 4 0 0 1 7 1"/><path d="M147 79a4.5 4.5 0 0 1 8 1"/><path d="M181 84a4 4 0 0 1 7 1"/>
+                </g>
+                <!-- клубника и шоколадный декор -->
+                <path d="M126 78l8 -14 6 12Z" fill="#4A2E1E"/>
+                <path d="M168 76l10 -10 2 12Z" fill="#4A2E1E"/>
+                <path d="M150 56 C158 56 163 62 162 69 C161 76 155 81 150 83 C145 81 139 76 138 69 C137 62 142 56 150 56 Z" fill="url(#bBerry)"/>
+                <path d="M146 55 q4 -6 9 -2" fill="none" stroke="#5C3A28" stroke-width="3" stroke-linecap="round"/>
+                <g fill="#F2D8A0"><circle cx="146" cy="64" r=".9"/><circle cx="153" cy="62" r=".9"/><circle cx="150" cy="70" r=".9"/><circle cx="156" cy="69" r=".9"/><circle cx="145" cy="72" r=".9"/></g>
+                <ellipse cx="146" cy="63" rx="3" ry="5" fill="#E88A70" opacity=".7" transform="rotate(-20 146 63)"/>
+                <!-- ягодка на тарелке -->
+                <circle cx="216" cy="160" r="6" fill="url(#bBerry)"/><circle cx="214" cy="158" r="1.2" fill="#E88A70"/>
+                <g fill="#C98A4B"><circle cx="86" cy="176" r="2"/><circle cx="238" cy="178" r="2"/></g>
+              </svg>
+            </div>
+            <div class="mt-auto flex items-end justify-between gap-3">
+              <p class="text-sm text-choco/65 leading-snug">К празднику и семейному столу — испечём к вашему дню.</p>
+              <button type="button" data-cat-btn="custom" aria-label="Открыть мини-прайс: торты и пироги на заказ"
+                      class="w-11 h-11 shrink-0 rounded-full bg-cream text-choco grid place-items-center shadow-card group-hover:bg-cinnamon group-hover:text-cream transition-colors">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-arrow"/></svg>
+              </button>
+            </div>
+          </article>
+
+          <!-- Карточка 3: Нежные десерты -->
+          <article data-cat-card="desserts" class="group cursor-pointer bg-sand300 rounded-[1.75rem] border border-choco/5 p-6 pt-7 flex flex-col shadow-card hover:shadow-soft hover:-translate-y-1 transition-all duration-300 reveal" style="transition-delay:200ms">
+            <h3 class="font-display text-2xl text-center leading-snug">Нежные десерты</h3>
+            <div class="my-4 transition-transform duration-500 group-hover:scale-[1.04] group-hover:-rotate-1">
+              <svg viewBox="0 0 300 210" class="w-full" role="img" aria-label="Шоколадный эклер с кремом и воздушная меренга">
+                <defs>
+                  <linearGradient id="cChoux" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8B36B"/><stop offset="1" stop-color="#C08040"/></linearGradient>
+                  <linearGradient id="cGlaze" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6E4630"/><stop offset="1" stop-color="#4A2E1E"/></linearGradient>
+                  <filter id="cBlur" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3"/></filter>
+                </defs>
+                <ellipse cx="150" cy="180" rx="118" ry="16" fill="#6B3F24" opacity=".18" filter="url(#cBlur)"/>
+                <ellipse cx="150" cy="170" rx="118" ry="26" fill="#FDFAF3"/>
+                <ellipse cx="150" cy="168" rx="92" ry="18" fill="#F4ECDD" stroke="#E7DAC4" stroke-width="1.5"/>
+                <!-- эклер -->
+                <ellipse cx="140" cy="150" rx="86" ry="12" fill="#6B3F24" opacity=".2" filter="url(#cBlur)"/>
+                <g transform="rotate(-8 140 118)">
+                  <rect x="62" y="100" width="156" height="36" rx="18" fill="url(#cChoux)"/>
+                  <path d="M70 128 q8 10 16 0 q8 10 16 0 q8 10 16 0 q8 10 16 0 q8 10 16 0 q8 10 16 0 q8 10 16 0 q8 10 16 0" fill="#FBF3E4"/>
+                  <rect x="62" y="96" width="156" height="26" rx="13" fill="url(#cGlaze)"/>
+                  <path d="M76 105 h92" stroke="#8A5A3C" stroke-width="4" stroke-linecap="round" opacity=".55"/>
+                  <path d="M186 104 h16" stroke="#8A5A3C" stroke-width="4" stroke-linecap="round" opacity=".4"/>
+                </g>
+                <!-- меренга -->
+                <g>
+                  <ellipse cx="240" cy="132" rx="22" ry="12" fill="#FBF3E4" stroke="#E4D0B4" stroke-width="1.5"/>
+                  <ellipse cx="240" cy="116" rx="15" ry="10" fill="#FBF3E4" stroke="#E4D0B4" stroke-width="1.5"/>
+                  <ellipse cx="240" cy="103" rx="9" ry="7" fill="#FBF3E4" stroke="#E4D0B4" stroke-width="1.5"/>
+                  <path d="M240 88c5 4 4 9 0 12c-4 -3 -5 -8 0 -12Z" fill="#FBF3E4" stroke="#E4D0B4" stroke-width="1.5"/>
+                  <path d="M226 130q14 8 28 0" fill="none" stroke="#E4D0B4" stroke-width="2" opacity=".8"/>
+                  <path d="M230 115q10 6 20 0" fill="none" stroke="#E4D0B4" stroke-width="2" opacity=".8"/>
+                </g>
+                <g fill="#FFFDF6" opacity=".9"><circle cx="120" cy="160" r="1.5"/><circle cx="176" cy="164" r="1.5"/><circle cx="206" cy="156" r="1.3"/></g>
+                <g fill="#C98A4B"><circle cx="66" cy="178" r="2"/><circle cx="262" cy="176" r="2"/></g>
+              </svg>
+            </div>
+            <div class="mt-auto flex items-end justify-between gap-3">
+              <p class="text-sm text-choco/65 leading-snug">Пирожные, эклеры и меренговые рулеты — к чаю и просто так.</p>
+              <button type="button" data-cat-btn="desserts" aria-label="Открыть мини-прайс: нежные десерты"
+                      class="w-11 h-11 shrink-0 rounded-full bg-cream text-choco grid place-items-center shadow-card group-hover:bg-cinnamon group-hover:text-cream transition-colors">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-arrow"/></svg>
+              </button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ 4. ИДЕАЛЬНАЯ ПАРА: КОФЕ И ЧАЙ ══════════ -->
+    <section id="drinks" class="scroll-mt-24 pb-14 md:pb-20">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 grid md:grid-cols-2 gap-10 items-center">
+
+        <!-- чашка латте -->
+        <div class="reveal">
+          <svg viewBox="0 0 460 360" class="w-full max-w-[500px] mx-auto" role="img" aria-label="Чашка капучино с латте-артом на блюдце, печенье и ложечка">
+            <defs>
+              <radialGradient id="kPlate" cx=".5" cy=".42" r=".75"><stop offset="0" stop-color="#FFFDF7"/><stop offset=".62" stop-color="#F3EADC"/><stop offset="1" stop-color="#E4D6C2"/></radialGradient>
+              <linearGradient id="kCup" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFDF8"/><stop offset="1" stop-color="#E9DCC8"/></linearGradient>
+              <radialGradient id="kLatte" cx=".4" cy=".35" r=".85"><stop offset="0" stop-color="#D2A06B"/><stop offset=".5" stop-color="#B07A44"/><stop offset="1" stop-color="#8A5A34"/></radialGradient>
+              <radialGradient id="kCookie" cx=".38" cy=".32" r=".9"><stop offset="0" stop-color="#E2A55F"/><stop offset="1" stop-color="#C08040"/></radialGradient>
+              <linearGradient id="kGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E2B279"/><stop offset="1" stop-color="#9A6A30"/></linearGradient>
+              <filter id="kSoft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="6"/></filter>
+              <filter id="kSoft2" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3"/></filter>
+            </defs>
+
+            <ellipse cx="230" cy="190" rx="205" ry="150" fill="#F2E7D8"/>
+            <circle cx="356" cy="76" r="34" fill="#EFE0CD" opacity=".8"/>
+
+            <!-- кофейные зёрна -->
+            <g>
+              <ellipse cx="86" cy="84" rx="9" ry="6" fill="#6E4630" transform="rotate(-25 86 84)"/>
+              <path d="M80 87q6 -6 12 -5" fill="none" stroke="#3E2A1F" stroke-width="2" transform="rotate(-25 86 84)"/>
+              <ellipse cx="114" cy="62" rx="8" ry="5.5" fill="#6E4630" transform="rotate(20 114 62)"/>
+              <path d="M108 64q6 -5 11 -4" fill="none" stroke="#3E2A1F" stroke-width="2" transform="rotate(20 114 62)"/>
+            </g>
+
+            <!-- блюдце -->
+            <ellipse cx="225" cy="302" rx="160" ry="26" fill="#6B3F24" opacity=".2" filter="url(#kSoft)"/>
+            <ellipse cx="225" cy="288" rx="158" ry="36" fill="url(#kPlate)"/>
+            <ellipse cx="225" cy="284" rx="118" ry="24" fill="#F6EFE2" stroke="#E3D4BE" stroke-width="1.5"/>
+
+            <!-- печенье -->
+            <circle cx="118" cy="282" r="20" fill="url(#kCookie)"/>
+            <circle cx="118" cy="282" r="20" fill="none" stroke="#B4712F" stroke-width="1.5" stroke-dasharray="2 4" opacity=".6"/>
+            <g fill="#5C3A28"><circle cx="110" cy="276" r="2.5"/><circle cx="124" cy="272" r="2.2"/><circle cx="126" cy="288" r="2.5"/><circle cx="112" cy="290" r="2"/><circle cx="119" cy="281" r="2"/></g>
+
+            <!-- ложечка -->
+            <ellipse cx="330" cy="296" rx="42" ry="7" fill="#6B3F24" opacity=".2" filter="url(#kSoft2)"/>
+            <path d="M316 288 C338 281 358 279 372 282 C375 283 375 288 372 289 C356 292 336 293 318 293 Z" fill="url(#kGold)"/>
+            <ellipse cx="306" cy="290" rx="16" ry="7" fill="url(#kGold)" transform="rotate(-10 306 290)"/>
+            <ellipse cx="306" cy="289" rx="11" ry="4.5" fill="#8A5C28" opacity=".5" transform="rotate(-10 306 289)"/>
+
+            <!-- чашка -->
+            <ellipse cx="225" cy="272" rx="92" ry="16" fill="#6B3F24" opacity=".25" filter="url(#kSoft2)"/>
+            <path d="M317 178 C351 172 362 196 352 216 C344 232 322 238 310 232" fill="none" stroke="#EFE4D2" stroke-width="13" stroke-linecap="round"/>
+            <path d="M321 186 C344 182 352 198 345 212" fill="none" stroke="#C9B698" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+            <path d="M133 168 C133 236 165 268 225 268 C285 268 317 236 317 168 L317 156 L133 156 Z" fill="url(#kCup)"/>
+            <path d="M289 176 C287 224 265 252 233 262 C270 258 305 232 309 176 Z" fill="#D9C8AE" opacity=".5"/>
+            <ellipse cx="225" cy="156" rx="92" ry="26" fill="#FDFAF4"/>
+            <ellipse cx="225" cy="158" rx="84" ry="22" fill="#E8DCC8"/>
+            <ellipse cx="225" cy="160" rx="78" ry="19" fill="url(#kLatte)"/>
+
+            <!-- латте-арт «тюльпан» -->
+            <g fill="#F6EBD9" opacity=".95">
+              <path d="M225 147c-5 -5 -13 -2 -13 4c0 5 7 8 13 12c6 -4 13 -7 13 -12c0 -6 -8 -9 -13 -4Z"/>
+              <path d="M209 160 Q225 170 241 160 Q225 178 209 160Z"/>
+              <circle cx="225" cy="143" r="2.5"/>
+            </g>
+            <path d="M225 146 L225 172" stroke="#F6EBD9" stroke-width="3" stroke-linecap="round" opacity=".95"/>
+
+            <!-- пар -->
+            <g fill="none" stroke="#C9AF8F" stroke-width="5" stroke-linecap="round">
+              <path class="steam"         d="M197 128 C189 112 205 100 197 84 C191 70 201 62 197 50"/>
+              <path class="steam steam-2" d="M227 122 C219 106 235 94 227 78 C221 64 231 56 227 42"/>
+              <path class="steam steam-3" d="M257 128 C249 112 265 100 257 84 C251 70 261 62 257 50"/>
+            </g>
+            <g fill="#C98A4B"><circle cx="158" cy="296" r="2"/><circle cx="286" cy="300" r="1.8"/></g>
+          </svg>
+        </div>
+
+        <!-- текст -->
+        <div class="reveal" style="transition-delay:120ms">
+          <p class="text-xs font-extrabold tracking-[0.25em] text-cinnamon uppercase">Кофе и чай с собой</p>
+          <h2 class="font-display text-3xl md:text-4xl mt-2 leading-tight">Идеальная пара<br>к горячей плюшке</h2>
+          <svg class="w-28 mt-4" viewBox="0 0 112 12" aria-hidden="true">
+            <path d="M2 8 q10 -8 20 0 t20 0 t20 0 t20 0 t20 0" fill="none" stroke="#D9975C" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+          <p class="text-choco/70 mt-5 leading-relaxed max-w-md">
+            Зерновой кофе свежей обжарки, пряный безалкогольный глинтвейн и согревающие чаи.
+            Возьмите стаканчик с собой — и утро станет тёплым даже по дороге.
+          </p>
+          <div class="mt-5 flex flex-wrap gap-2">
+            <span class="rounded-full bg-sand100 border border-sand200 px-3.5 py-1.5 text-xs font-bold">Свежее зерно</span>
+            <span class="rounded-full bg-sand100 border border-sand200 px-3.5 py-1.5 text-xs font-bold">С собой</span>
+            <span class="rounded-full bg-sand100 border border-sand200 px-3.5 py-1.5 text-xs font-bold">Глинтвейн 0%</span>
+          </div>
+          <button type="button" data-cat-btn="drinks"
+                  class="mt-7 inline-flex items-center gap-2.5 bg-cinnamon text-cream rounded-full px-7 py-3.5 font-bold hover:bg-cocoa transition-colors shadow-card">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-cup"/></svg>
+            Выбрать напиток
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ 5. АДРЕСА В БУГУЛЬМЕ ══════════ -->
+    <section id="addresses" class="scroll-mt-24 pb-16 md:pb-24">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="flex flex-wrap items-end justify-between gap-4 reveal">
+          <div>
+            <p class="text-xs font-extrabold tracking-[0.25em] text-cinnamon uppercase">Бугульма · три пекарни</p>
+            <h2 class="font-display text-3xl md:text-4xl mt-2">Наши пекарни в городе</h2>
+          </div>
+          <span data-status class="inline-flex items-center rounded-full bg-sand100 border border-sand200 px-4 py-2 text-xs font-bold"></span>
+        </div>
+
+        <!-- переключатель точек -->
+        <div class="mt-8 flex flex-wrap gap-2 reveal" role="tablist" aria-label="Выбор пекарни">
+          <button type="button" role="tab" aria-selected="true"  data-shop="0" class="shop-tab rounded-full border-2 px-4 py-2 text-sm font-bold transition bg-cinnamon text-cream border-cinnamon">Гоголя, 63</button>
+          <button type="button" role="tab" aria-selected="false" data-shop="1" class="shop-tab rounded-full border-2 px-4 py-2 text-sm font-bold transition bg-sand100 text-choco border-sand200 hover:border-cinnamon/50">Калинина, 34</button>
+          <button type="button" role="tab" aria-selected="false" data-shop="2" class="shop-tab rounded-full border-2 px-4 py-2 text-sm font-bold transition bg-sand100 text-choco border-sand200 hover:border-cinnamon/50">Кирова, 12</button>
+        </div>
+
+        <!-- панель выбранной пекарни -->
+        <div id="shopPanel" class="mt-6 grid md:grid-cols-2 gap-8 items-center transition-all duration-300 reveal">
+          <div class="bg-sand100 rounded-3xl p-6 md:p-8 border border-choco/5">
+            <p id="shopKicker" class="text-xs font-extrabold tracking-[0.22em] text-cinnamon uppercase">Пекарня №1</p>
+            <h3 id="shopTitle" class="font-display text-2xl mt-1.5">ул. Николая Гоголя, 63</h3>
+            <p id="shopNote" class="text-sm text-choco/65 mt-2">Уютный зал, полная витрина сдобы и кофе с собой.</p>
+
+            <ul class="mt-5 space-y-3.5 text-sm">
+              <li class="flex gap-3">
+                <svg class="w-5 h-5 text-cinnamon shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-clock"/></svg>
+                <span><b>Ежедневно:</b> 08:00 — 20:00
+                  <span data-status class="block text-xs text-choco/55 mt-1"></span>
+                </span>
+              </li>
+              <li class="flex gap-3">
+                <svg class="w-5 h-5 text-cinnamon shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-phone"/></svg>
+                <a href="tel:+79870054444" class="font-extrabold hover:text-cinnamon transition-colors">+7 (987) 005-44-44</a>
+              </li>
+              <li class="flex gap-3">
+                <svg class="w-5 h-5 text-cinnamon shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-pin"/></svg>
+                <span>Бугульма, Республика Татарстан</span>
+              </li>
+            </ul>
+
+            <div class="mt-6 flex flex-wrap gap-3">
+              <a id="shopMap" href="https://yandex.ru/maps/?text=Бугульма, улица Николая Гоголя, 63" target="_blank" rel="noopener"
+                 class="border-2 border-cinnamon text-cinnamon rounded-full px-5 py-2.5 text-sm font-bold hover:bg-cinnamon hover:text-cream transition-colors">Маршрут на карте</a>
+              <button type="button" id="shopOrder" data-point="0"
+                      class="bg-cinnamon text-cream rounded-full px-5 py-2.5 text-sm font-bold hover:bg-cocoa transition-colors">Предзаказ сюда</button>
+            </div>
+          </div>
+
+          <!-- фасад пекарни -->
+          <div class="relative">
+            <svg viewBox="0 0 460 340" class="w-full max-w-[500px] mx-auto" role="img" aria-label="Уютный фасад пекарни Плюшки-Ватрушки с полосатым навесом и витриной выпечки">
+              <!-- земля -->
+              <rect x="20" y="300" width="420" height="6" rx="3" fill="#E4D2BA"/>
+              <!-- здание -->
+              <rect x="80" y="70" width="320" height="230" rx="10" fill="#F6EBDC" stroke="#E0CDB2" stroke-width="2"/>
+              <g stroke="#EADBC4" stroke-width="2"><path d="M96 176h26"/><path d="M348 176h36"/><path d="M96 292h20"/><path d="M388 100h0"/></g>
+              <!-- вывеска -->
+              <rect x="120" y="40" width="220" height="44" rx="10" fill="#784B37"/>
+              <text x="230" y="62" text-anchor="middle" font-family="Lora, serif" font-style="italic" font-weight="600" font-size="21" fill="#F6EBDC">Плюшки-Ватрушки</text>
+              <text x="230" y="76" text-anchor="middle" font-family="Manrope, sans-serif" font-weight="700" font-size="7" letter-spacing="3" fill="#D9BFA8">ПЕКАРНЯ • БУГУЛЬМА</text>
+              <!-- полосатый навес -->
+              <rect x="64" y="96" width="352" height="14" rx="7" fill="#784B37"/>
+              <g>
+                <rect x="68"  y="110" width="43" height="26" fill="#8A5A44"/><circle cx="89.5"  cy="136" r="21.5" fill="#8A5A44"/>
+                <rect x="111" y="110" width="43" height="26" fill="#F6EBDC"/><circle cx="132.5" cy="136" r="21.5" fill="#F6EBDC"/>
+                <rect x="154" y="110" width="43" height="26" fill="#8A5A44"/><circle cx="175.5" cy="136" r="21.5" fill="#8A5A44"/>
+                <rect x="197" y="110" width="43" height="26" fill="#F6EBDC"/><circle cx="218.5" cy="136" r="21.5" fill="#F6EBDC"/>
+                <rect x="240" y="110" width="43" height="26" fill="#8A5A44"/><circle cx="261.5" cy="136" r="21.5" fill="#8A5A44"/>
+                <rect x="283" y="110" width="43" height="26" fill="#F6EBDC"/><circle cx="304.5" cy="136" r="21.5" fill="#F6EBDC"/>
+                <rect x="326" y="110" width="43" height="26" fill="#8A5A44"/><circle cx="347.5" cy="136" r="21.5" fill="#8A5A44"/>
+                <rect x="369" y="110" width="43" height="26" fill="#F6EBDC"/><circle cx="390.5" cy="136" r="21.5" fill="#F6EBDC"/>
+              </g>
+              <!-- гирлянда -->
+              <path d="M80 168 Q240 188 400 168" fill="none" stroke="#B99C79" stroke-width="2"/>
+              <g fill="#F2C879"><circle cx="112" cy="174" r="4"/><circle cx="176" cy="180" r="4"/><circle cx="240" cy="182" r="4"/><circle cx="304" cy="180" r="4"/><circle cx="368" cy="174" r="4"/></g>
+              <g fill="#F2C879" opacity=".3"><circle cx="112" cy="174" r="8"/><circle cx="240" cy="182" r="8"/><circle cx="368" cy="174" r="8"/></g>
+              <!-- витрина -->
+              <rect x="108" y="190" width="160" height="92" rx="10" fill="#FFF9EE" stroke="#D9C6AE" stroke-width="3"/>
+              <path d="M114 222h148"/><path d="M114 252h148" stroke="#E4D2BA" stroke-width="3"/>
+              <path d="M114 222h148" stroke="#E4D2BA" stroke-width="3"/>
+              <g fill="#D9975C"><circle cx="124" cy="212" r="9"/><circle cx="148" cy="212" r="9"/><circle cx="172" cy="212" r="9"/></g>
+              <g fill="#F6E7D2"><circle cx="121" cy="209" r="2"/><circle cx="145" cy="209" r="2"/><circle cx="169" cy="209" r="2"/></g>
+              <g transform="rotate(-6 224 210)">
+                <rect x="196" y="204" width="56" height="11" rx="5.5" fill="#C9803F"/>
+                <g stroke="#A9622B" stroke-width="1.5"><path d="M208 206l4 7"/><path d="M222 206l4 7"/><path d="M236 206l4 7"/></g>
+              </g>
+              <rect x="116" y="234" width="36" height="18" rx="3" fill="#E8D4BC"/>
+              <rect x="116" y="234" width="36" height="7" rx="3" fill="#6E4630"/>
+              <circle cx="134" cy="231" r="3" fill="#B0563B"/>
+              <ellipse cx="196" cy="246" rx="24" ry="9" fill="#D9975C" stroke="#B4712F" stroke-width="1.5"/>
+              <path d="M176 244h40 M180 249h32" stroke="#B4712F" stroke-width="1.5"/>
+              <path d="M228 248c0 -10 10 -18 20 -18s20 8 20 18c-6 -5 -12 -7 -20 -7s-14 2 -20 7Z" fill="#D9975C" stroke="#B4712F" stroke-width="1"/>
+              <!-- дверь -->
+              <rect x="300" y="190" width="76" height="110" rx="10" fill="#8A5A44" stroke="#6B3F2A" stroke-width="2"/>
+              <path d="M306 232 a24 24 0 0 1 48 0 v22 h-48Z" fill="#FFF3E0" opacity=".92"/>
+              <circle cx="362" cy="268" r="3.5" fill="#F2C879"/>
+              <rect x="306" y="262" width="48" height="16" rx="4" fill="#F6EBDC"/>
+              <text x="330" y="273" text-anchor="middle" font-family="Manrope, sans-serif" font-weight="800" font-size="8" fill="#784B37">ОТКРЫТО</text>
+              <rect x="300" y="302" width="76" height="8" rx="4" fill="#C9A87F" opacity=".8"/>
+              <!-- меловая доска -->
+              <path d="M20 292 L16 306 M66 292 L70 306" stroke="#8A5A44" stroke-width="3" stroke-linecap="round"/>
+              <rect x="14" y="238" width="58" height="54" rx="6" fill="#3E2A1F" stroke="#8A5A44" stroke-width="3"/>
+              <text x="43" y="260" text-anchor="middle" font-family="Lora, serif" font-style="italic" font-size="11" fill="#F6EBDC">Свежие</text>
+              <text x="43" y="274" text-anchor="middle" font-family="Lora, serif" font-style="italic" font-size="11" fill="#F6EBDC">плюшки!</text>
+              <svg x="38" y="278" width="10" height="10" viewBox="0 0 24 24" fill="#D9975C"><use href="#i-heart"/></svg>
+              <!-- кадка с пшеницей -->
+              <g fill="none" stroke="#C9A15C" stroke-width="2.5" stroke-linecap="round">
+                <path d="M424 264 C422 250 420 240 418 230"/><path d="M428 264 C428 248 428 238 428 226"/><path d="M432 264 C434 250 436 242 438 232"/>
+              </g>
+              <g fill="#E2B279">
+                <ellipse cx="417" cy="227" rx="3" ry="5" transform="rotate(-15 417 227)"/><ellipse cx="413" cy="234" rx="3" ry="5" transform="rotate(-30 413 234)"/>
+                <ellipse cx="428" cy="222" rx="3" ry="5"/><ellipse cx="424" cy="229" rx="3" ry="5" transform="rotate(-20 424 229)"/>
+                <ellipse cx="439" cy="229" rx="3" ry="5" transform="rotate(15 439 229)"/><ellipse cx="443" cy="236" rx="3" ry="5" transform="rotate(30 443 236)"/>
+              </g>
+              <rect x="408" y="264" width="36" height="10" rx="4" fill="#B0563B"/>
+              <path d="M410 274 L442 274 L436 300 L416 300 Z" fill="#B0563B"/>
+              <path d="M410 274 L442 274 L440 282 L412 282 Z" fill="#9A4834"/>
+            </svg>
+            <div id="shopBadge" class="absolute -top-3 right-2 md:right-8 w-14 h-14 rounded-full bg-cinnamon text-cream font-display text-lg grid place-items-center shadow-soft border-4 border-cream">№1</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ══════════ ПОДВАЛ (какао + рваный край) ══════════ -->
+  <footer class="bg-cocoa text-cream">
+    <svg class="block w-full h-7 md:h-10 text-cream rotate-180" viewBox="0 0 1440 48" preserveAspectRatio="none" aria-hidden="true"><use href="#torn" width="1440" height="48"/></svg>
+
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1.2fr_1.2fr]">
+      <!-- бренд -->
+      <div>
+        <p class="font-display italic font-semibold text-2xl leading-tight">Плюшки-Ватрушки</p>
+        <p class="text-[10px] font-extrabold tracking-[0.28em] text-sand300 uppercase mt-1">Пекарня • Бугульма</p>
+        <p class="text-sm text-cream/70 mt-4 max-w-xs leading-relaxed">«Мы печёмся о вашей сладкой жизни» — свежая сдоба, пироги и кофе каждый день.</p>
+        <div class="flex gap-3 mt-5">
+          <a href="https://vk.com/plushki_vatrushki_bugulma" target="_blank" rel="noopener" aria-label="Пекарня ВКонтакте"
+             class="w-10 h-10 rounded-full border border-cream/25 grid place-items-center hover:bg-cream/10 transition-colors">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-vk"/></svg>
+          </a>
+          <a href="tel:+79870054444" aria-label="Позвонить в пекарню"
+             class="w-10 h-10 rounded-full border border-cream/25 grid place-items-center hover:bg-cream/10 transition-colors">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-phone"/></svg>
+          </a>
+          <a href="https://yandex.ru/maps/?text=Плюшки-Ватрушки Бугульма" target="_blank" rel="noopener" aria-label="Пекарни на карте"
+             class="w-10 h-10 rounded-full border border-cream/25 grid place-items-center hover:bg-cream/10 transition-colors">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-pin"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- разделы -->
+      <nav aria-label="Разделы сайта">
+        <h4 class="text-xs font-extrabold tracking-[0.22em] uppercase text-sand300">Разделы</h4>
+        <ul class="mt-4 space-y-2.5 text-sm text-cream/80">
+          <li><a href="#menu" class="hover:text-cream transition-colors">Меню выпечки</a></li>
+          <li><a href="#drinks" class="hover:text-cream transition-colors">Кофе и чай</a></li>
+          <li><a href="#addresses" class="hover:text-cream transition-colors">Адреса пекарен</a></li>
+          <li><button type="button" data-open-order class="hover:text-cream transition-colors">Предзаказ выпечки</button></li>
+        </ul>
+      </nav>
+
+      <!-- адреса -->
+      <div>
+        <h4 class="text-xs font-extrabold tracking-[0.22em] uppercase text-sand300">Адреса</h4>
+        <ul class="mt-4 space-y-2.5 text-sm text-cream/80">
+          <li class="flex gap-2"><svg class="w-4 h-4 mt-0.5 shrink-0 text-honey" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-pin"/></svg>ул. Николая Гоголя, 63</li>
+          <li class="flex gap-2"><svg class="w-4 h-4 mt-0.5 shrink-0 text-honey" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-pin"/></svg>ул. Михаила Калинина, 34</li>
+          <li class="flex gap-2"><svg class="w-4 h-4 mt-0.5 shrink-0 text-honey" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-pin"/></svg>ул. Сергея Кирова, 12</li>
+          <li class="text-cream/55 text-xs pt-1">Бугульма, Республика Татарстан</li>
+        </ul>
+      </div>
+
+      <!-- контакты -->
+      <div>
+        <h4 class="text-xs font-extrabold tracking-[0.22em] uppercase text-sand300">Контакты</h4>
+        <a href="tel:+79870054444" class="block font-display text-xl font-semibold mt-4 hover:underline underline-offset-4">+7 (987) 005-44-44</a>
+        <p class="text-sm text-cream/70 mt-2">Ежедневно: 08:00 — 20:00</p>
+        <span data-status class="inline-flex items-center rounded-full bg-cream/10 border border-cream/15 px-3.5 py-1.5 text-xs font-bold mt-3"></span>
+        <button type="button" data-open-order class="block mt-5 bg-cream text-choco rounded-full px-5 py-2.5 text-sm font-bold hover:bg-sand100 transition-colors">Заказать выпечку</button>
+      </div>
+    </div>
+
+    <div class="border-t border-cream/15">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-cream/60">
+        <p>© <span id="year">2026</span> Пекарня «Плюшки-Ватрушки» · Бугульма</p>
+        <p class="flex items-center gap-1.5">испечено с любовью
+          <svg class="w-3.5 h-3.5 text-honey" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-heart"/></svg>
+        </p>
+        <a href="#top" class="flex items-center gap-1.5 hover:text-cream transition-colors font-bold">Наверх
+          <svg class="w-4 h-4 -rotate-90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-arrow"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ══════════ МОДАЛКА: МИНИ-ПРАЙС КАТЕГОРИИ ══════════ -->
+  <div id="catModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="catTitle" aria-hidden="true">
+    <div class="absolute inset-0 bg-choco/60 backdrop-blur-[2px]" data-close></div>
+    <div class="m-panel relative w-full max-w-md bg-cream rounded-[1.75rem] shadow-soft border border-sand200 p-6 md:p-7 max-h-[88vh] overflow-y-auto">
+      <button type="button" data-close aria-label="Закрыть окно"
+              class="absolute top-4 right-4 w-9 h-9 rounded-full bg-sand100 hover:bg-sand200 grid place-items-center transition-colors">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><use href="#i-close"/></svg>
+      </button>
+      <p class="text-[11px] font-extrabold tracking-[0.22em] text-cinnamon uppercase">Мини-прайс</p>
+      <h3 id="catTitle" class="font-display text-2xl mt-1 pr-8">Свежая выпечка</h3>
+      <p id="catDesc" class="text-sm text-choco/65 mt-1">Плюшки с корицей, ватрушки с творогом, круассаны — горячие, каждое утро.</p>
+
+      <ul id="catList" class="mt-4">
+        <li class="flex items-baseline gap-2 py-2.5 text-sm"><span class="font-medium">Плюшка с корицей</span><span class="flex-1 border-b-2 border-dotted border-sand300"></span><span class="font-extrabold whitespace-nowrap">59 ₽</span></li>
+        <li class="flex items-baseline gap-2 py-2.5 text-sm"><span class="font-medium">Ватрушка с творогом</span><span class="flex-1 border-b-2 border-dotted border-sand300"></span><span class="font-extrabold whitespace-nowrap">69 ₽</span></li>
+        <li class="flex items-baseline gap-2 py-2.5 text-sm"><span class="font-medium">Круассан сливочный</span><span class="flex-1 border-b-2 border-dotted border-sand300"></span><span class="font-extrabold whitespace-nowrap">89 ₽</span></li>
+        <li class="flex items-baseline gap-2 py-2.5 text-sm"><span class="font-medium">Круассан с миндалём</span><span class="flex-1 border-b-2 border-dotted border-sand300"></span><span class="font-extrabold whitespace-nowrap">119 ₽</span></li>
+        <li class="flex items-baseline gap-2 py-2.5 text-sm"><span class="font-medium">Улитка с изюмом</span><span class="flex-1 border-b-2 border-dotted border-sand300"></span><span class="font-extrabold whitespace-nowrap">65 ₽</span></li>
+        <li class="flex items-baseline gap-2 py-2.5 text-sm"><span class="font-medium">Слойка с яблоком</span><span class="flex-1 border-b-2 border-dotted border-sand300"></span><span class="font-extrabold whitespace-nowrap">59 ₽</span></li>
+      </ul>
+
+      <p id="catNote" class="mt-4 text-xs text-choco/55 bg-sand100 rounded-xl px-4 py-3 leading-relaxed">Печём небольшими партиями в течение дня. К вечеру любимое может закончиться — берите с запасом!</p>
+
+      <button type="button" id="catOrder" data-type="fresh"
+              class="mt-5 w-full inline-flex items-center justify-center gap-2 bg-cinnamon text-cream rounded-full py-3.5 font-bold hover:bg-cocoa transition-colors">
+        Заказать из этой категории
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-arrow"/></svg>
+      </button>
+      <p class="mt-3 text-center text-xs text-choco/55">Или позвоните: <a href="tel:+79870054444" class="font-extrabold text-cinnamon">+7 (987) 005-44-44</a></p>
+    </div>
+  </div>
+
+  <!-- ══════════ МОДАЛКА: ПРЕДЗАКАЗ ══════════ -->
+  <div id="orderModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="orderTitle" aria-hidden="true">
+    <div class="absolute inset-0 bg-choco/60 backdrop-blur-[2px]" data-close></div>
+    <div class="m-panel relative w-full max-w-lg bg-cream rounded-[1.75rem] shadow-soft border border-sand200 p-6 md:p-8 max-h-[90vh] overflow-y-auto">
+      <button type="button" data-close aria-label="Закрыть окно"
+              class="absolute top-4 right-4 w-9 h-9 rounded-full bg-sand100 hover:bg-sand200 grid place-items-center transition-colors">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><use href="#i-close"/></svg>
+      </button>
+
+      <!-- форма -->
+      <div id="orderFormWrap">
+        <p class="text-[11px] font-extrabold tracking-[0.22em] text-cinnamon uppercase">Предзаказ · самовывоз в Бугульме</p>
+        <h3 id="orderTitle" class="font-display text-2xl mt-1 pr-8">Пирог, торт или выпечка к утру</h3>
+        <p class="text-sm text-choco/65 mt-1.5">Оставьте заявку — перезвоним, подтвердим заказ и испечём к вашему приходу.</p>
+
+        <form id="orderForm" class="mt-5 space-y-4" novalidate>
+          <div>
+            <label for="oType" class="block text-sm font-bold mb-1.5">Что будем печь?</label>
+            <select id="oType" data-err="eType" required
+                    class="w-full rounded-xl border border-sand300 bg-[#FFFDF9] px-4 py-3 text-sm focus:border-cinnamon focus:ring-2 focus:ring-cinnamon/25 outline-none transition">
+              <option value="" disabled selected>Выберите категорию</option>
+              <option value="fresh">Свежая выпечка (плюшки, ватрушки, круассаны)</option>
+              <option value="custom">Торт или пирог на заказ</option>
+              <option value="desserts">Пирожные и десерты</option>
+              <option value="drinks">Напитки к выпечке</option>
+              <option value="other">Другое — расскажу в пожелании</option>
+            </select>
+            <p id="eType" class="hidden text-berry text-xs mt-1.5 font-semibold">Выберите вариант из списка</p>
+          </div>
+
+          <div>
+            <label for="oPoint" class="block text-sm font-bold mb-1.5">Точка самовывоза</label>
+            <select id="oPoint" data-err="ePoint" required
+                    class="w-full rounded-xl border border-sand300 bg-[#FFFDF9] px-4 py-3 text-sm focus:border-cinnamon focus:ring-2 focus:ring-cinnamon/25 outline-none transition">
+              <option value="" disabled selected>Выберите пекарню</option>
+              <option value="0">ул. Николая Гоголя, 63</option>
+              <option value="1">ул. Михаила Калинина, 34</option>
+              <option value="2">ул. Сергея Кирова, 12</option>
+            </select>
+            <p id="ePoint" class="hidden text-berry text-xs mt-1.5 font-semibold">Выберите точку самовывоза</p>
+          </div>
+
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label for="oName" class="block text-sm font-bold mb-1.5">Имя</label>
+              <input id="oName" data-err="eName" type="text" autocomplete="name" placeholder="Как к вам обращаться?" required
+                     class="w-full rounded-xl border border-sand300 bg-[#FFFDF9] px-4 py-3 text-sm placeholder:text-choco/35 focus:border-cinnamon focus:ring-2 focus:ring-cinnamon/25 outline-none transition">
+              <p id="eName" class="hidden text-berry text-xs mt-1.5 font-semibold">Минимум 2 буквы — как к вам обращаться?</p>
+            </div>
+            <div>
+              <label for="oPhone" class="block text-sm font-bold mb-1.5">Телефон</label>
+              <input id="oPhone" data-err="ePhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__" required
+                     class="w-full rounded-xl border border-sand300 bg-[#FFFDF9] px-4 py-3 text-sm placeholder:text-choco/35 focus:border-cinnamon focus:ring-2 focus:ring-cinnamon/25 outline-none transition">
+              <p id="ePhone" class="hidden text-berry text-xs mt-1.5 font-semibold">Введите номер полностью: +7 (XXX) XXX-XX-XX</p>
+            </div>
+          </div>
+
+          <div>
+            <label for="oWish" class="block text-sm font-bold mb-1.5">Пожелание <span class="font-medium text-choco/45">(необязательно)</span></label>
+            <textarea id="oWish" rows="3" placeholder="Начинка, вес, дата и время самовывоза, надпись на торте…"
+                      class="w-full rounded-xl border border-sand300 bg-[#FFFDF9] px-4 py-3 text-sm placeholder:text-choco/35 focus:border-cinnamon focus:ring-2 focus:ring-cinnamon/25 outline-none transition resize-none"></textarea>
+          </div>
+
+          <button type="submit"
+                  class="w-full inline-flex items-center justify-center gap-2 bg-cinnamon text-cream rounded-full py-3.5 font-bold hover:bg-cocoa transition-colors">
+            Отправить предзаказ
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-arrow"/></svg>
+          </button>
+          <p class="text-[11px] text-choco/45 leading-relaxed text-center">Нажимая «Отправить», вы соглашаетесь на обработку персональных данных.</p>
+        </form>
+      </div>
+
+      <!-- успех -->
+      <div id="orderSuccess" hidden>
+        <div class="w-16 h-16 rounded-full bg-sand100 grid place-items-center mx-auto mt-2">
+          <svg class="w-8 h-8 text-cinnamon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-check"/></svg>
+        </div>
+        <h3 class="font-display text-2xl text-center mt-4">Предзаказ принят!</h3>
+        <p class="text-sm text-choco/65 text-center mt-2 leading-relaxed">Мы перезвоним в течение 15 минут в рабочее время (08:00–20:00) и подтвердим детали.</p>
+
+        <div class="mt-5 bg-sand100 rounded-2xl p-4 text-sm space-y-2.5">
+          <p class="flex justify-between gap-4"><span class="text-choco/55 shrink-0">Заказ</span><b id="sumType" class="text-right"></b></p>
+          <p class="flex justify-between gap-4"><span class="text-choco/55 shrink-0">Самовывоз</span><b id="sumPoint" class="text-right"></b></p>
+          <p class="flex justify-between gap-4"><span class="text-choco/55 shrink-0">Имя</span><b id="sumName" class="text-right"></b></p>
+          <p class="flex justify-between gap-4"><span class="text-choco/55 shrink-0">Телефон</span><b id="sumPhone" class="text-right"></b></p>
+        </div>
+
+        <div class="mt-5 grid grid-cols-2 gap-3">
+          <a href="tel:+79870054444" class="border-2 border-cinnamon text-cinnamon rounded-full py-3 text-sm font-bold text-center hover:bg-cinnamon hover:text-cream transition-colors">Позвонить</a>
+          <button type="button" data-close class="bg-cinnamon text-cream rounded-full py-3 text-sm font-bold hover:bg-cocoa transition-colors">Отлично!</button>
+        </div>
+        <p class="mt-3 text-center text-xs text-choco/55">Срочный заказ? <a href="tel:+79870054444" class="font-extrabold text-cinnamon">+7 (987) 005-44-44</a> · <a href="https://vk.com/plushki_vatrushki_bugulma" target="_blank" rel="noopener" class="font-extrabold text-cinnamon">Мы во ВКонтакте</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ VANILLA JS ══════════ -->
+  <script>
+    'use strict';
+    const $  = (s, c = document) => c.querySelector(s);
+    const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+    const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ───────── Данные: мини-прайсы (цены редактируются здесь) ───────── */
+    const CATS = {
+      fresh: {
+        title: 'Свежая выпечка',
+        desc: 'Плюшки с корицей, ватрушки с творогом, круассаны — горячие, каждое утро.',
+        items: [
+          ['Плюшка с корицей', '59 ₽'], ['Ватрушка с творогом', '69 ₽'],
+          ['Круассан сливочный', '89 ₽'], ['Круассан с миндалём', '119 ₽'],
+          ['Улитка с изюмом', '65 ₽'], ['Слойка с яблоком', '59 ₽']
+        ],
+        note: 'Печём небольшими партиями в течение дня. К вечеру любимое может закончиться — берите с запасом!'
+      },
+      custom: {
+        title: 'Торты и пироги на заказ',
+        desc: 'К празднику и семейному столу — испечём к вашему дню.',
+        items: [
+          ['Пирог с яблоком и корицей', 'от 390 ₽'], ['Пирог с капустой и яйцом', 'от 350 ₽'],
+          ['Киш с курицей и грибами', 'от 450 ₽'], ['Медовик, 1 кг', 'от 890 ₽'],
+          ['Торт на заказ, 1 кг', 'от 1 090 ₽']
+        ],
+        note: 'Заказ принимаем за 2–3 дня. Начинку, вес и оформление подскажем по телефону +7 (987) 005-44-44.'
+      },
+      desserts: {
+        title: 'Нежные десерты',
+        desc: 'Пирожные, эклеры и меренговые рулеты — к чаю и просто так.',
+        items: [
+          ['Эклер заварной', '89 ₽'], ['Трубочка с кремом', '69 ₽'],
+          ['Пирожное «Картошка»', '59 ₽'], ['Меренговый рулет, порция', '139 ₽'],
+          ['Безе воздушное', '39 ₽']
+        ],
+        note: 'Десерты собираем утром из свежайшего творога и сливок. Храним недолго — съедайте с удовольствием!'
+      },
+      drinks: {
+        title: 'Кофе и чай с собой',
+        desc: 'Идеальная пара к горячей плюшке.',
+        items: [
+          ['Капучино, 300 мл', '129 ₽'], ['Латте, 400 мл', '149 ₽'],
+          ['Раф ванильный', '169 ₽'], ['Глинтвейн безалкогольный', '149 ₽'],
+          ['Чай облепиховый', '119 ₽'], ['Какао с маршмеллоу', '129 ₽']
+        ],
+        note: 'Готовим на зерне свежей обжарки. Любой напиток соберём с собой — крышка и держатель в подарок.'
+      }
+    };
+
+    /* ───────── Данные: пекарни (реальные адреса) ───────── */
+    const SHOPS = [
+      { kicker: 'Пекарня №1', addr: 'ул. Николая Гоголя, 63',
+        note: 'Уютный зал, полная витрина сдобы и кофе с собой.',
+        map: 'https://yandex.ru/maps/?text=Бугульма, улица Николая Гоголя, 63' },
+      { kicker: 'Пекарня №2', addr: 'ул. Михаила Калинина, 34',
+        note: 'Свежая выпечка, пироги и десерты к семейному чаю.',
+        map: 'https://yandex.ru/maps/?text=Бугульма, улица Михаила Калинина, 34' },
+      { kicker: 'Пекарня №3', addr: 'ул. Сергея Кирова, 12',
+        note: 'Удобный самовывоз предзаказов и горячий кофе по дороге.',
+        map: 'https://yandex.ru/maps/?text=Бугульма, улица Сергея Кирова, 12' }
+    ];
+
+    /* ───────── Модальные окна: открытие/закрытие, фокус, Esc ───────── */
+    const catModal = $('#catModal'), orderModal = $('#orderModal');
+    let modalStack = [], lastFocus = null;
+
+    function openModal(m) {
+      if (m.classList.contains('open')) return;
+      lastFocus = document.activeElement;
+      m.classList.add('open');
+      m.setAttribute('aria-hidden', 'false');
+      modalStack.push(m);
+      document.body.style.overflow = 'hidden';
+      const target = m.querySelector('select, input, textarea') || m.querySelector('.m-panel button');
+      setTimeout(() => target && target.focus(), 90);
+    }
+    function closeModal(m) {
+      if (!m.classList.contains('open')) return;
+      m.classList.remove('open');
+      m.setAttribute('aria-hidden', 'true');
+      modalStack = modalStack.filter(x => x !== m);
+      if (!modalStack.length) document.body.style.overflow = '';
+      if (m === orderModal) setTimeout(resetOrder, 300);
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+    document.addEventListener('keydown', e => {
+      const top = modalStack[modalStack.length - 1];
+      if (!top) return;
+      if (e.key === 'Escape') { closeModal(top); return; }
+      if (e.key === 'Tab') { // ловушка фокуса
+        const f = $$('a[href], button:not([disabled]), select, input, textarea', top)
+          .filter(el => el.offsetParent !== null);
+        if (!f.length) return;
+        const first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    });
+
+    /* ───────── Мини-прайс категории ───────── */
+    function renderCat(key) {
+      const c = CATS[key]; if (!c) return;
+      $('#catTitle').textContent = c.title;
+      $('#catDesc').textContent  = c.desc;
+      $('#catNote').textContent  = c.note;
+      $('#catList').innerHTML = c.items.map(([n, p]) =>
+        `<li class="flex items-baseline gap-2 py-2.5 text-sm"><span class="font-medium">${n}</span><span class="flex-1 border-b-2 border-dotted border-sand300"></span><span class="font-extrabold whitespace-nowrap">${p}</span></li>`
+      ).join('');
+      $('#catOrder').dataset.type = key;
+    }
+
+    /* ───────── Предзаказ: открытие с предвыбором ───────── */
+    const orderForm = $('#orderForm');
+    const oType = $('#oType'), oPoint = $('#oPoint'), oName = $('#oName'), oPhone = $('#oPhone'), oWish = $('#oWish');
+
+    function openOrder(opts = {}) {
+      resetOrder();
+      if (opts.type && CATS[opts.type] || opts.type === 'other') oType.value = opts.type;
+      if (opts.point !== undefined && opts.point !== null) oPoint.value = String(opts.point);
+      openModal(orderModal);
+    }
+    function resetOrder() {
+      orderForm.reset();
+      $$('.input-error', orderModal).forEach(el => el.classList.remove('input-error'));
+      $$('#eType, #ePoint, #eName, #ePhone').forEach(p => p.classList.add('hidden'));
+      $('#orderFormWrap').hidden = false;
+      $('#orderSuccess').hidden = true;
+    }
+
+    /* Единый делегированный обработчик кликов */
+    document.addEventListener('click', e => {
+      const closer = e.target.closest('[data-close]');
+      if (closer) { const m = closer.closest('.modal'); if (m) closeModal(m); return; }
+
+      const orderBtn = e.target.closest('[data-open-order]');
+      if (orderBtn) { openOrder({ type: orderBtn.dataset.type }); closeMobile(); return; }
+
+      const catBtn = e.target.closest('[data-cat-btn]');
+      if (catBtn) { renderCat(catBtn.dataset.catBtn); openModal(catModal); return; }
+
+      const card = e.target.closest('[data-cat-card]');
+      if (card) { renderCat(card.dataset.catCard); openModal(catModal); }
+    });
+
+    $('#catOrder').addEventListener('click', () => {
+      const type = $('#catOrder').dataset.type;
+      closeModal(catModal);
+      setTimeout(() => openOrder({ type }), 200);
+    });
+    $('#shopOrder').addEventListener('click', function () {
+      openOrder({ point: this.dataset.point });
+    });
+
+    /* ───────── Маска телефона + валидация ───────── */
+    let prevPhone = '';
+    function formatPhone(raw) {
+      let d = raw.replace(/\D/g, '');
+      if (!d) return '';
+      if (d[0] === '8') d = '7' + d.slice(1);
+      if (d[0] === '9') d = '7' + d;
+      if (d[0] !== '7') d = '7' + d;
+      d = d.slice(0, 11);
+      let out = '+7';
+      if (d.length > 1)  out += ' (' + d.slice(1, 4);
+      if (d.length >= 5) out += ') ' + d.slice(4, 7);
+      if (d.length >= 8) out += '-' + d.slice(7, 9);
+      if (d.length >= 10) out += '-' + d.slice(9, 11);
+      return out;
+    }
+    oPhone.addEventListener('input', e => {
+      let digits = e.target.value.replace(/\D/g, '');
+      const prevDigits = prevPhone.replace(/\D/g, '');
+      // при удалении «съедаем» и цифру перед символом форматирования
+      if (e.inputType && e.inputType.startsWith('delete') &&
+          digits.length === prevDigits.length && digits.length > 1) {
+        digits = digits.slice(0, -1);
+      }
+      const v = formatPhone(digits);
+      e.target.value = v; prevPhone = v;
+    });
+    oPhone.addEventListener('focus', () => { if (!oPhone.value) { oPhone.value = '+7 ('; prevPhone = '+7 ('; } });
+    oPhone.addEventListener('blur',  () => { if (oPhone.value.replace(/\D/g, '').length <= 1) { oPhone.value = ''; prevPhone = ''; } });
+
+    function setErr(input, on) {
+      input.classList.toggle('input-error', on);
+      const p = document.getElementById(input.dataset.err);
+      if (p) p.classList.toggle('hidden', !on);
+    }
+    [oType, oPoint, oName, oPhone].forEach(el =>
+      el.addEventListener('input', () => setErr(el, false)));
+
+    orderForm.addEventListener('submit', e => {
+      e.preventDefault();
+      let ok = true, firstBad = null;
+      const check = (input, valid) => {
+        setErr(input, !valid);
+        if (!valid) { ok = false; firstBad = firstBad || input; }
+      };
+      check(oType,  !!oType.value);
+      check(oPoint, oPoint.value !== '');
+      check(oName,  oName.value.trim().length >= 2);
+      check(oPhone, oPhone.value.replace(/\D/g, '').length === 11);
+      if (!ok) { firstBad.focus(); return; }
+
+      /* TODO (боевой запуск): отправить заявку в CRM / Telegram-бот / на почту пекарни.
+         Сейчас — демонстрационное подтверждение без бэкенда. */
+      $('#sumType').textContent  = oType.options[oType.selectedIndex].text;
+      $('#sumPoint').textContent = oPoint.options[oPoint.selectedIndex].text;
+      $('#sumName').textContent  = oName.value.trim();
+      $('#sumPhone').textContent = oPhone.value;
+      $('#orderFormWrap').hidden = true;
+      $('#orderSuccess').hidden = false;
+      $('#orderSuccess button[data-close]').focus();
+    });
+
+    /* ───────── Переключение пекарен ───────── */
+    const tabs = $$('.shop-tab'), panel = $('#shopPanel');
+    const TAB_ON  = ['bg-cinnamon', 'text-cream', 'border-cinnamon'];
+    const TAB_OFF = ['bg-sand100', 'text-choco', 'border-sand200', 'hover:border-cinnamon/50'];
+
+    function fillShop(i) {
+      const s = SHOPS[i];
+      $('#shopKicker').textContent = s.kicker;
+      $('#shopTitle').textContent  = s.addr;
+      $('#shopNote').textContent   = s.note;
+      $('#shopMap').href           = s.map;
+      $('#shopBadge').textContent  = '№' + (i + 1);
+      $('#shopOrder').dataset.point = i;
+    }
+    function renderShop(i, instant = false) {
+      tabs.forEach((t, j) => {
+        const on = j === i;
+        t.setAttribute('aria-selected', String(on));
+        TAB_ON.forEach(c  => t.classList.toggle(c, on));
+        TAB_OFF.forEach(c => t.classList.toggle(c, !on));
+      });
+      if (instant || REDUCED) { fillShop(i); return; }
+      panel.style.opacity = '0';
+      panel.style.transform = 'translateY(8px)';
+      setTimeout(() => {
+        fillShop(i);
+        panel.style.opacity = '1';
+        panel.style.transform = 'none';
+      }, 180);
+    }
+    tabs.forEach(t => t.addEventListener('click', () => renderShop(+t.dataset.shop)));
+    renderShop(0, true);
+
+    /* ───────── Статус «открыто/закрыто» (время Бугульмы = МСК) ───────── */
+    function tickStatus() {
+      let h;
+      try {
+        h = parseInt(new Intl.DateTimeFormat('ru-RU', {
+          hour: 'numeric', hour12: false, timeZone: 'Europe/Moscow'
+        }).format(new Date()), 10);
+      } catch (_) { h = new Date().getHours(); }
+      const open = h >= 8 && h < 20;
+      $$('[data-status]').forEach(el => {
+        el.innerHTML = `<span class="st-dot ${open ? 'st-open' : 'st-closed'}"></span>${open ? 'Открыто сейчас · до 20:00' : 'Закрыто · откроемся в 08:00'}`;
+      });
+    }
+    tickStatus();
+    setInterval(tickStatus, 60000);
+
+    /* ───────── Мобильное меню ───────── */
+    const burger = $('#burgerBtn'), mobileMenu = $('#mobileMenu');
+    function closeMobile() {
+      mobileMenu.classList.add('hidden');
+      burger.setAttribute('aria-expanded', 'false');
+      $('#burgerOpen').classList.remove('hidden');
+      $('#burgerClose').classList.add('hidden');
+    }
+    burger.addEventListener('click', () => {
+      const open = mobileMenu.classList.toggle('hidden') === false;
+      burger.setAttribute('aria-expanded', String(open));
+      $('#burgerOpen').classList.toggle('hidden', open);
+      $('#burgerClose').classList.toggle('hidden', !open);
+    });
+    $$('.mobile-link').forEach(el => el.addEventListener('click', closeMobile));
+
+    /* ───────── Тень шапки при скролле ───────── */
+    const header = $('#siteHeader');
+    addEventListener('scroll', () => {
+      header.classList.toggle('shadow-card', scrollY > 10);
+    }, { passive: true });
+
+    /* ───────── Плавное появление блоков ───────── */
+    const revealEls = $$('.reveal');
+    if (REDUCED || !('IntersectionObserver' in window)) {
+      revealEls.forEach(el => el.classList.add('in'));
+    } else {
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(en => {
+          if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+        });
+      }, { threshold: .12, rootMargin: '0px 0px -40px 0px' });
+      revealEls.forEach(el => io.observe(el));
+    }
+
+    /* ───────── Год в подвале ───────── */
+    $('#year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
